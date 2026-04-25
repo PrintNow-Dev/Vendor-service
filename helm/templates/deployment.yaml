@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vendor-service
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: vendor-service
+  template:
+    metadata:
+      labels:
+        app: vendor-service
+    spec:
+      containers:
+        - name: vendor-service
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5004
+          envFrom:
+            - configMapRef:
+                name: vendor-service-config
+            - secretRef:
+                name: vendor-service-secret
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 5004
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 5004
+            initialDelaySeconds: 20
+            periodSeconds: 20
+
+
