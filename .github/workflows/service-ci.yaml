@@ -14,8 +14,8 @@ jobs:
     uses: PrintNow-Dev/PrintNow/.github/workflows/backend.yml@dev
 
     with:
-      service: "printnow-document-service"
-      image: "ghcr.io/printnow-dev/printnow-document-service"
+      service: "printnow-vendor-service"
+      image: "ghcr.io/printnow-dev/printnow-vendor-service"
       trigger: ${{ github.event_name }}
 
     secrets: inherit
